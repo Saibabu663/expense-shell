@@ -1,5 +1,15 @@
+#!/bin/bash
 
-validate(){
+USERID=$(id -u)
+TIMESTAMP=$(date +%f-%h-%m-%s)
+script_name=$(echo $0 |cut -d "." -f1)                                                                                                            -f1
+LOGFILE=/temp/$SCRIPT_NAME-$TIMESTAMP.log
+R="\e[31m"
+G="\e[32m"
+y="\e[33m"
+N="\e[0m"
+
+VALIDATE(){
    if [ $1 -ne 0 ]
    then
         echo -e "$2...$r failuru $n"
