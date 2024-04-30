@@ -19,18 +19,18 @@ then
 fi
   
   dnf module disable nodejs -y &>>$LOGFILE
-  Validate $? "Disabling default nodejs"
+  VALIDATE $? "Disabling default nodejs"
 
   dnf module enable nodejs:20 -y &>>$LOGFILE
-  Validate $? "Enabling nodejs:20 version"
+  VALIDATE $? "Enabling nodejs:20 version"
 
   dnf install nodejs -y &>>$LOGFILE
- validate $? "Installing nodejs"
+  VALIDATE $? "Installing nodejs"
 
- id expense -y &>>$LOGFILE
+ id expense  &>>$LOGFILE
  if [ $? -ne 0 ]
  then
-    useradd expense -y &>>$LOGFILE
+    useradd expense  &>>$LOGFILE
     Validate $? "creating expense user"
 else
     echo -e "Expense user already created...$Y SKIPPING $N"
