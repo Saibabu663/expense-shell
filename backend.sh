@@ -17,7 +17,7 @@ then
     else
         echo "you are super user."
 fi
-  
+
   dnf module disable nodejs -y &>>$LOGFILE
   VALIDATE $? "Disabling default nodejs"
 
@@ -30,7 +30,7 @@ fi
  id expense  &>>$LOGFILE
  if [ $? -ne 0 ]
  then
-    useradd expense  &>>$LOGFILE
+    useradd expense &>>$LOGFILE
     Validate $? "creating expense user"
 else
     echo -e "Expense user already created...$Y SKIPPING $N"
