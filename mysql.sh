@@ -8,8 +8,7 @@ R="\e[31m"
 G="\e[32m"
 y="\e[33m"
 N="\e[0m"
-echo "Please enter DB password:"
-read -s mysql_root_password
+
 
 validate(){
    if [ $1 -ne 0]
@@ -38,16 +37,7 @@ fi
  systemctl start mysqld  &>>$logfile
   validate $? "starting mysql server"
 
-# mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$logfile
-#  validate $? "setting up root password"
+mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$logfile
+ validate $? "setting up root password"
 
-#Below code will be useful for idempotent nature
-mysql -h db.daws-78s.online -uroot -pExpenseApp@1 -e 'show databases;'
-if [ $? -ne 0]
-then
-    mysql_secure_installation --set-root-pass ExpenseApp@1
-    validate $? "Mysql Root password Setup"
-else
-    echo -e "Mysql Root password is already setup..$Y SKIPPING $N"
-fi
 
