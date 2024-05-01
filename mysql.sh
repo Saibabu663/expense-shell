@@ -1,26 +1,26 @@
 #!/bin/bash
 
-userid=$(id -u)
-TIMESTAMP=$(date +%f-%h-%m-%s)
-script_name=$(echo $0 |cut -d "." -f1)                                                                                                            -f1
-logfile=/temp/$script_name-$timestamp.log
+USERID=$(id -u)
+TIMESTAMP=$(date +%F-%H-%M-%S)
+SCRIPT_NAME=$(echo $0 | cut -d "." -f1)                                                                                                            -f1
+LOGFILE=/tmp/$SCRIPT_NAME-$TIMESTAMP.log
 R="\e[31m"
 G="\e[32m"
 y="\e[33m"
 N="\e[0m"
 
 
-validate(){
-   if [ $1 -ne 0]
+VALIDATE(){
+   if [ $1 -ne 0 ]
    then
-        echo -e "$2...$r failuru $n"
+        echo -e "$2...$R FAILURE $N"
         exit 1
     else
-        echo -e "$2...$g success $n"
+        echo -e "$2...$g SUCCESS $N"
     fi
 }
 
-if [ $userid -ne 0 ] 
+if [ $USERID -ne 0 ] 
 then     
     echo "please run this script with root access."
     exit 1 # manually exit if error comes.
@@ -28,16 +28,25 @@ then
         echo "you are super user."
 fi
   
-  dnf install mysql-server -y &>>$logfile
-  validate $? "installing mysql server"
+  dnf install mysql-server -y &>>$LOGFILE
+  VALIDATE $? "Installing MYSQL Server"
 
-  systemctl enable mysqld &>>$logfile
-  validate $? "enabling mysql server"
+  systemctl enable mysqld &>>$LOGFILE
+  VALIDATE $? "Enabling MYSQL Server"
 
- systemctl start mysqld  &>>$logfile
-  validate $? "starting mysql server"
+ systemctl start mysqld  &>>$LOGFILE
+  VALIDATE $? "Starting MYSQL Server"
 
-mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$logfile
- validate $? "setting up root password"
+#  mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$logfile
+#  VALIDATE $? "etting up root password"
 
 
+#Below code will be useful for idempotent nature
+ mysql -h db.daws-78s.online -uroot -pExpenseApp@1 -e 'SHOW  DATABASES
+ if [ $? -ne 0 ]
+ then
+    mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOGFILE
+    VALIDATE $? "MYSQL Root password Setup"
+else
+    echo -e "MYSQL Root password is already setup...$Y SKIPPING $N"
+fi
